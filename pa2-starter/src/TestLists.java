@@ -12,48 +12,112 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class TestLists {
 
-	public static Collection<Object[]> LISTNUMS =
-			Arrays.asList(new Object[][] { {"Linked"}, {"Array"} });
-	private String listType;
+    public static Collection<Object[]> LISTNUMS =
+        Arrays.asList(new Object[][] { {"Linked"}, {"Array"} });
+    private String listType;
 
-	public TestLists(String listType) {
-		super();
-		this.listType = listType;
-	}
+    public TestLists(String listType) {
+        super();
+        this.listType = listType;
+    }
 
-	@Parameterized.Parameters(name = "{0}List")
-	public static Collection<Object[]> bags() {
-		return LISTNUMS;
-	}
+    @Parameterized.Parameters(name = "{0}List")
+    public static Collection<Object[]> bags() {
+        return LISTNUMS;
+    }
 
-	private <E> MyList<E> makeList(E[] contents) {
-		switch (this.listType) {
-		case "Linked":
-			return new LinkedGL<E>(contents);
-		case "Array":
-			return new ArrayGL<E>(contents);
-		}
-		return null;
-	}
+    private <E> MyList<E> makeList(E[] contents) {
+        switch (this.listType) {
+            case "Linked":
+                return new LinkedGL<E>(contents);
+            case "Array":
+                return new ArrayGL<E>(contents);
+        }
+        return null;
+    }
 
-  // Don't change code above this line, it ensures the autograder works as
-  // expected
+    // Don't change code above this line, it ensures the autograder works as
+    // expected
 
 
-  // This is a sample test; you can keep it, change it, or remove it as you like.
-  // Note that it uses the method `assertArrayEquals`, which you should use to
-  // test equality of arrays in this PA.
-	@Test
-	public void testSimpleToArray() {
-		// Using the generic list to create an Integer list
-		Integer[] int_input = {1, 2, 3};
-		MyList<Integer> int_s = makeList(int_input);
-		assertArrayEquals(int_input, int_s.toArray());
-		
-		// Using the generic list to create a String list
-		String[] string_input = {"a", "b", "c"};
-		MyList<String> string_s = makeList(string_input);
-		assertArrayEquals(string_input, string_s.toArray());
-	}
+    // This is a sample test; you can keep it, change it, or remove it as you like.
+    // Note that it uses the method `assertArrayEquals`, which you should use to
+    // test equality of arrays in this PA.
+    @Test
+    public void testSimpleToArray() {
+        // Using the generic list to create an Integer list
+        Integer[] int_input = {1, 2, 3};
+        MyList<Integer> int_s = makeList(int_input);
+        // printAllValues(int_s.toArray());
+        assertArrayEquals(int_input, int_s.toArray());
+
+        // Using the generic list to create a String list
+        String[] string_input = {"a", "b", "c"};
+        MyList<String> string_s = makeList(string_input);
+        // printAllValues(string_s.toArray());
+        assertArrayEquals(string_input, string_s.toArray());
+    }
+    @Test
+    public void testEmpty() {
+        // Creating non-empty list
+        Integer[] int_input = {1, 2, 3};
+        MyList<Integer> int_s = makeList(int_input);
+        assertFalse(int_s.isEmpty());
+        
+        // creating empty list
+        Boolean[] emptyList = new Boolean[0];
+        MyList<Boolean> bool_s = makeList(emptyList);
+        assertTrue(bool_s.isEmpty());
+    }
+
+    @Test
+    public void testTransform() {
+        // Creating non-empty list
+        String[] string_input = {"a", "b", "c"};
+        MyList<String> string_s = makeList(string_input);
+        UpperCaseTransformer mt = new UpperCaseTransformer();
+        string_s.transformAll(mt);
+        String[] desired = {"A", "B", "C"};
+        
+        assertArrayEquals(desired, string_s.toArray());
+    }
+
+    @Test
+    public void testChooseAll() {
+        // Creating string list for LongWordChooser
+        // String[] string_input = {"adefgh", "b", "c"};
+        String[] string_input = {"b", "c", "adefgh"};
+        // String[] desired = new String[0];
+        String[] desired = {"adefgh"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new LongWordChooser();
+        string_s.chooseAll(words);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
+        
+        
+        // creating empty list
+        // Boolean[] emptyList = new Boolean[0];
+        // MyList<Boolean> bool_s = makeList(emptyList);
+        // assertTrue(bool_s.isEmpty());
+    }
+    // @Test
+    // public void testDelinkLinked(){
+    //     String[] string_input = {"b", "c", "adefgh"};
+    //     // MyList<String> string_s = new LinkedGL(string_input);
+    //     LinkedGL<String> string_s = new LinkedGL(string_input);
+    //     string_s.delinkNodeAtIndex(1);
+    //     string_s.delinkNodeAtIndex(0);
+    //     String[] desired = {"adefgh"};
+    //     assertArrayEquals(desired, string_s.toArray());
+
+    // }
+    private void printAllValues(Object[] o){
+        System.out.print("\n[");
+        for(int i = 0; i < o.length-1; i++){
+            System.out.format("%s, ", o[i]);
+        }
+        System.out.format("%s]\n",o[o.length-1]);
+    }
 
 }
