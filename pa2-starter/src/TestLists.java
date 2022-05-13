@@ -92,6 +92,7 @@ public class TestLists {
         MyList<String> string_s = makeList(string_input);
         MyChooser<String> words = new LongWordChooser();
         string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
         printAllValues(string_s.toArray()); 
         assertArrayEquals(desired, string_s.toArray());
         

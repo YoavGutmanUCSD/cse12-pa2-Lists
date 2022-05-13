@@ -70,86 +70,63 @@ public class LinkedGL<E> implements MyList<E> {
             current = current.next;
         }
     }
-    // public void chooseAll(MyChooser mc){
-    //     Node current = front;
-    //     int i = 0;
-    //     while(current != null){
-    //         if (current.value == null) {
-    //             delinkNodeAtIndex(i);
-    //         }
-    //         if (mc.chooseElement(current.value)) {
-                
-    //         }
 
-    //         i++;
-    //         current = current.next;
-    //     }
-    // }
     public void chooseAll(MyChooser mc){
-        Node previous = null;
+        boolean shouldChooseTilEnd = chooseUntilFrontChosen(mc);
+        if(!shouldChooseTilEnd) return;
+        chooseTilEnd(mc);
+    }
+    private void chooseTilEnd(MyChooser mc) {
+        // this function assumes the front is good
+        // has to run after chooseUntilFrontChosen
+
+        Node current = front;
+
+        // check current.next for values
+        for(int i = 1; i < size; i++){
+
+            if(current.next.value == null) {
+                delinkNextNode(current);
+            }
+
+            if (!mc.chooseElement(current.next.value)) {
+                delinkNextNode(current);
+            }
+
+            current = current.next;
+        }
+
+    }
+    private boolean chooseUntilFrontChosen(MyChooser mc){
+        // should return true if there is a point in running chooseTilEnd
+        // choose from the beginning until there is a good value
         Node current = front;
         for(int i = 0; i < size; i++){
-            boolean shouldSelect;
-            if (current == null) 
-                shouldSelect = false;
 
-            else if (current.value == null) 
-                shouldSelect = false;
-
-            else 
-                shouldSelect = mc.chooseElement(current.value);
-            System.out.println();
-            System.out.println(i);
-            System.out.println(current.value);
-            System.out.println(shouldSelect);
-            if(!shouldSelect){
-                delinkNodeAtIndex(i);
-                i = 0;
+            // if no nodes match, this prevents a crash.
+            if(current == null){
+                break;
             }
-            current = current.next;
-            // if(!shouldSelect){
-            //     delinkNodeAtIndex(i);
-            //     // if(previous == null){
-            //     //     this.front = this.front.next;
-            //     //     current = this.front;
-            //     // }
-            //     // else{
-            //     //     // skip the next one
-            //     //     previous.next = previous.next.next;
-            //     //     // take the one right after the previous next
-            //     //     // this should keep current 1 ahead
-            //     //     current = previous.next.next;
-            // }
-            // else {
-            //     // increment the counters otherwise
-            //     previous = current;
-            //     current = current.next;
-            // }
-        }
-    }
 
-    // helper method
-    // private void delinkNodeAtIndex(Node current, Node previous){ //, boolean isFirst){
-    // }
-    // helper method (tested - works!)
-    private void delinkNodeAtIndex(int index){ //, boolean isFirst){
-        if(index >= size) {
-            return;
-        }
-        Node current = front;
-        Node previous = current;
-        this.size--;
-        if(index == 0){
+            if(mc.chooseElement(current.value)){
+                return true;
+            }
+
             this.front = this.front.next;
+            current = front;
+            size--;
+        }
+        // return true if the array isn't empty
+        return front.next != null; // & !front.next.equals(new Node(null, null));
+    }
+    private void delinkNextNode(Node curr){
+        if(curr == null) {
             return;
-        } 
-        for(int i = 0; i < index; i++){
-            previous = current;
-            current = current.next;
         }
-        if(index == size) {
-            previous.next = null;
+        if(curr.next == null){
+            return;
         }
-        else previous.next = previous.next.next;
+        curr.next = curr.next.next;
+        size--;
     }
 }
