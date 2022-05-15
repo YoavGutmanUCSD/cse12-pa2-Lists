@@ -1,4 +1,5 @@
 // import java.util.Arrays;
+import java.lang.IllegalArgumentException;
 
 
 public class LinkedGL<E> implements MyList<E> {
@@ -83,17 +84,20 @@ public class LinkedGL<E> implements MyList<E> {
         Node current = front;
 
         // check current.next for values
-        for(int i = 1; i < size; i++){
+        // that means we have to start at 1
+        int i = 1;
+        while (i < this.size){
 
             if(current.next.value == null) {
                 delinkNextNode(current);
             }
-
-            if (!mc.chooseElement(current.next.value)) {
+            else if (!mc.chooseElement(current.next.value)) {
                 delinkNextNode(current);
             }
-
-            current = current.next;
+            else {
+                current = current.next;
+                i++;
+            }
         }
 
     }
@@ -121,10 +125,10 @@ public class LinkedGL<E> implements MyList<E> {
     }
     private void delinkNextNode(Node curr){
         if(curr == null) {
-            return;
+            throw new IllegalArgumentException("delinkNextNode input is null");
         }
         if(curr.next == null){
-            return;
+            throw new IllegalArgumentException("delinkNextNode was given the last node. Bad usage!");
         }
         curr.next = curr.next.next;
         size--;

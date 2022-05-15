@@ -102,17 +102,42 @@ public class TestLists {
         // MyList<Boolean> bool_s = makeList(emptyList);
         // assertTrue(bool_s.isEmpty());
     }
-    // @Test
-    // public void testDelinkLinked(){
-    //     String[] string_input = {"b", "c", "adefgh"};
-    //     // MyList<String> string_s = new LinkedGL(string_input);
-    //     LinkedGL<String> string_s = new LinkedGL(string_input);
-    //     string_s.delinkNodeAtIndex(1);
-    //     string_s.delinkNodeAtIndex(0);
-    //     String[] desired = {"adefgh"};
-    //     assertArrayEquals(desired, string_s.toArray());
+    @Test
+    public void testChooseNotFront(){
+        String[] string_input = {"adefgh", "b", "c"};
+        String[] desired = {"adefgh"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new LongWordChooser();
+        string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
+    }
+    @Test
+    public void testChooseCenter(){
+        String[] string_input = {"b", "adefgh", "c"};
+        String[] desired = {"adefgh"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new LongWordChooser();
+        string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
+    }
+    @Test
+    public void testChooseMany(){
+        String[] string_input = {"b", "adefgh", "c", "d", "asdfgh", "qwerty", "e", "f", "wedfcv"};
+        String[] desired = {"adefgh", "asdfgh", "qwerty", "wedfcv"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new LongWordChooser();
+        string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
 
-    // }
+        
+    }
+
     private void printAllValues(Object[] o){
         System.out.print("\n[");
         for(int i = 0; i < o.length-1; i++){
