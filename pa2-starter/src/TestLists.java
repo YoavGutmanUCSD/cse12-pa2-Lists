@@ -146,4 +146,49 @@ public class TestLists {
         System.out.format("%s]\n",o[o.length-1]);
     }
 
+    @Test
+    public void testChooseLower() {
+        String[] string_input = {"B", "C", "adefgh", "daled"};
+        String[] desired = {"adefgh", "daled"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new LowerCaseChooser();
+        string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
+    }
+    @Test
+    public void testChooseUpper() {
+        String[] string_input = {"B", "C", "adefgh", "daled"};
+        String[] desired = {"B", "C"};
+        MyList<String> string_s = makeList(string_input);
+        MyChooser<String> words = new UpperCaseChooser();
+        string_s.chooseAll(words);
+        System.out.format("\ntype: %s\n", string_s);
+        printAllValues(string_s.toArray()); 
+        assertArrayEquals(desired, string_s.toArray());
+    }
+
+    @Test
+    public void testTransformLower() {
+        // Creating non-empty list
+        String[] string_input = {"A", "B", "C"};
+        MyList<String> string_s = makeList(string_input);
+        LowerCaseTransformer mt = new LowerCaseTransformer();
+        string_s.transformAll(mt);
+        String[] desired = {"a", "b", "c"};
+        
+        assertArrayEquals(desired, string_s.toArray());
+    }
+    @Test
+    public void testTransformMiddle() {
+        // Creating non-empty list
+        String[] string_input = {"demacia", "noxus", "piltieitlip"};
+        MyList<String> string_s = makeList(string_input);
+        MiddleLetterTransformer mt = new MiddleLetterTransformer();
+        string_s.transformAll(mt);
+        String[] desired = {"a", "x", "e"};
+        
+        assertArrayEquals(desired, string_s.toArray());
+    }
 }
